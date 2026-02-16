@@ -100,7 +100,7 @@ export function Dashboard({ activeView = 'overview' }: DashboardProps) {
               </p>
             </div>
             <div className="flex items-center space-x-1">
-              <Users className="w-8 h-8 text-openclaw-primary" />
+              <Users className="w-8 h-8 text-blue-500" />
               {systemStatus.workingAgents > 0 && (
                 <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
               )}
@@ -194,7 +194,7 @@ export function Dashboard({ activeView = 'overview' }: DashboardProps) {
               <h2 className="text-xl font-semibold text-white">Project Management</h2>
               <button
                 onClick={() => setShowTaskAssignment(true)}
-                className="flex items-center space-x-2 px-4 py-2 bg-openclaw-primary hover:bg-openclaw-primary/90 text-white rounded-lg transition-colors"
+                className="flex items-center space-x-2 px-4 py-2 bg-blue-500 hover:bg-blue-500/90 text-white rounded-lg transition-colors"
               >
                 <Settings className="w-4 h-4" />
                 <span>Assign Task</span>

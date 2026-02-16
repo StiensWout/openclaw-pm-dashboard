@@ -146,9 +146,9 @@ export function MessagePanel({
   }
 
   return (
-    <div className={cn("flex flex-col h-full bg-dark-900 rounded-lg border border-dark-800", className)}>
+    <div className={cn("flex flex-col h-full bg-slate-800 rounded-lg border border-slate-700", className)}>
       {/* Header */}
-      <div className="p-4 border-b border-dark-800">
+      <div className="p-4 border-b border-slate-700">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-lg font-semibold text-white flex items-center">
             <MessageSquare className="w-5 h-5 mr-2" />
@@ -167,7 +167,7 @@ export function MessagePanel({
             placeholder="Search messages..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-dark-800 border border-dark-700 rounded-lg text-white placeholder-gray-400 focus:border-openclaw-primary focus:outline-none"
+            className="w-full pl-10 pr-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none"
           />
         </div>
 
@@ -200,8 +200,8 @@ export function MessagePanel({
                   className={cn(
                     "px-2 py-1 text-xs rounded transition-colors",
                     selectedTypes.includes(type)
-                      ? "bg-openclaw-primary text-white"
-                      : "bg-dark-700 text-gray-300 hover:bg-dark-600"
+                      ? "bg-blue-500 text-white"
+                      : "bg-slate-600 text-gray-300 hover:bg-slate-500"
                   )}
                 >
                   {type.replace('-', ' ')}
@@ -225,7 +225,7 @@ export function MessagePanel({
               key={message.id}
               onClick={() => onMessageSelect?.(message)}
               className={cn(
-                "p-3 rounded-lg border-l-4 cursor-pointer transition-all duration-200 hover:bg-dark-800/50",
+                "p-3 rounded-lg border-l-4 cursor-pointer transition-all duration-200 hover:bg-slate-700/50",
                 getMessageStyle(message.type, message.metadata?.severity)
               )}
             >

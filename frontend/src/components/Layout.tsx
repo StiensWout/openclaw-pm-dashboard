@@ -37,7 +37,7 @@ export function Layout({ children }: LayoutProps) {
   const [activeNav, setActiveNav] = useState('dashboard')
 
   return (
-    <div className="min-h-screen bg-dark-950 flex relative">
+    <div className="min-h-screen bg-slate-900 flex relative">
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div 
@@ -48,7 +48,7 @@ export function Layout({ children }: LayoutProps) {
 
       {/* Sidebar */}
       <div className={cn(
-        "bg-dark-900 border-r border-dark-800 transition-all duration-300 flex flex-col z-50",
+        "bg-slate-800 border-r border-slate-700 transition-all duration-300 flex flex-col z-50",
         // Mobile: fixed overlay sidebar
         "fixed lg:static inset-y-0 left-0",
         sidebarOpen 
@@ -56,9 +56,9 @@ export function Layout({ children }: LayoutProps) {
           : "w-64 -translate-x-full lg:translate-x-0 lg:w-16"
       )}>
         {/* Logo/Header */}
-        <div className="p-4 border-b border-dark-800">
+        <div className="p-4 border-b border-slate-700">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-openclaw-primary to-openclaw-secondary rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
               <Zap className="w-5 h-5 text-white" />
             </div>
             {sidebarOpen && (
@@ -84,8 +84,8 @@ export function Layout({ children }: LayoutProps) {
                     className={cn(
                       "w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-200 text-left",
                       isActive 
-                        ? "bg-openclaw-primary text-white shadow-lg" 
-                        : "text-gray-300 hover:bg-dark-800 hover:text-white"
+                        ? "bg-blue-500 text-white shadow-lg" 
+                        : "text-gray-300 hover:bg-slate-700 hover:text-white"
                     )}
                   >
                     <Icon className={cn(
@@ -103,10 +103,10 @@ export function Layout({ children }: LayoutProps) {
         </nav>
 
         {/* Sidebar Toggle */}
-        <div className="p-4 border-t border-dark-800">
+        <div className="p-4 border-t border-slate-700">
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="w-full flex items-center justify-center p-2 rounded-lg text-gray-400 hover:bg-dark-800 hover:text-white transition-colors"
+            className="w-full flex items-center justify-center p-2 rounded-lg text-gray-400 hover:bg-slate-700 hover:text-white transition-colors"
           >
             {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -116,13 +116,13 @@ export function Layout({ children }: LayoutProps) {
       {/* Main Content */}
       <div className="flex-1 flex flex-col lg:ml-0">
         {/* Top Bar */}
-        <header className="bg-dark-900 border-b border-dark-800 px-4 lg:px-6 py-4">
+        <header className="bg-slate-800 border-b border-slate-700 px-4 lg:px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               {/* Mobile menu button */}
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="lg:hidden p-2 rounded-lg text-gray-400 hover:bg-dark-800 hover:text-white transition-colors"
+                className="lg:hidden p-2 rounded-lg text-gray-400 hover:bg-slate-700 hover:text-white transition-colors"
               >
                 <Menu className="w-5 h-5" />
               </button>

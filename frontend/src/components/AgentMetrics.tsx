@@ -47,7 +47,7 @@ const MetricCard = ({
   icon: Icon, 
   trend, 
   color = 'text-gray-400',
-  bgColor = 'bg-dark-800'
+  bgColor = 'bg-slate-700'
 }: {
   title: string
   value: string | number
@@ -60,7 +60,7 @@ const MetricCard = ({
   const TrendIcon = trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : null
 
   return (
-    <div className={cn("p-4 rounded-lg border border-dark-700", bgColor)}>
+    <div className={cn("p-4 rounded-lg border border-slate-600", bgColor)}>
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center space-x-2">
           <Icon className={cn("w-4 h-4", color)} />
@@ -185,7 +185,7 @@ export function AgentMetrics({ agents, metrics, className }: AgentMetricsProps) 
           <select
             value={selectedAgent || ''}
             onChange={(e) => setSelectedAgent(e.target.value)}
-            className="px-3 py-2 bg-dark-800 border border-dark-700 rounded-lg text-white focus:border-openclaw-primary focus:outline-none"
+            className="px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:border-blue-500 focus:outline-none"
           >
             {agents.map(agent => (
               <option key={agent.id} value={agent.id}>
@@ -195,7 +195,7 @@ export function AgentMetrics({ agents, metrics, className }: AgentMetricsProps) 
           </select>
 
           {/* Time Range */}
-          <div className="flex rounded-lg border border-dark-700 overflow-hidden">
+          <div className="flex rounded-lg border border-slate-600 overflow-hidden">
             {(['1h', '6h', '24h'] as const).map(range => (
               <button
                 key={range}
@@ -203,8 +203,8 @@ export function AgentMetrics({ agents, metrics, className }: AgentMetricsProps) 
                 className={cn(
                   "px-3 py-2 text-sm transition-colors",
                   timeRange === range
-                    ? "bg-openclaw-primary text-white"
-                    : "text-gray-400 hover:text-white hover:bg-dark-800"
+                    ? "bg-blue-500 text-white"
+                    : "text-gray-400 hover:text-white hover:bg-slate-700"
                 )}
               >
                 {range}
@@ -238,7 +238,7 @@ export function AgentMetrics({ agents, metrics, className }: AgentMetricsProps) 
           value={totalErrors}
           icon={AlertTriangle}
           color="text-red-400"
-          bgColor={totalErrors > 0 ? "bg-red-900/10" : "bg-dark-800"}
+          bgColor={totalErrors > 0 ? "bg-red-900/10" : "bg-slate-700"}
           trend={totalErrors > 0 ? 'up' : 'stable'}
         />
         
@@ -346,7 +346,7 @@ export function AgentMetrics({ agents, metrics, className }: AgentMetricsProps) 
               {currentAgent.capabilities.map(capability => (
                 <span
                   key={capability}
-                  className="px-3 py-1 bg-openclaw-primary/10 text-openclaw-primary rounded-full text-sm"
+                  className="px-3 py-1 bg-blue-500/10 text-blue-500 rounded-full text-sm"
                 >
                   {capability}
                 </span>

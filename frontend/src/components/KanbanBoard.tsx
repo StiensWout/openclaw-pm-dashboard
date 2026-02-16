@@ -171,7 +171,7 @@ export function KanbanBoard({
         draggable
         onDragStart={(e) => handleDragStart(e, task)}
         className={cn(
-          "bg-dark-800 border border-dark-700 rounded-lg p-3 mb-3 cursor-move transition-all duration-200 hover:shadow-lg hover:border-openclaw-primary/50",
+          "bg-slate-700 border border-slate-600 rounded-lg p-3 mb-3 cursor-move transition-all duration-200 hover:shadow-lg hover:border-blue-500/50",
           getTaskPriorityColor(task.priority)
         )}
       >
@@ -198,7 +198,7 @@ export function KanbanBoard({
             {task.tags.slice(0, 3).map(tag => (
               <span
                 key={tag}
-                className="text-xs px-2 py-1 bg-openclaw-primary/10 text-openclaw-primary rounded"
+                className="text-xs px-2 py-1 bg-blue-500/10 text-blue-500 rounded"
               >
                 {tag}
               </span>
@@ -230,7 +230,7 @@ export function KanbanBoard({
         </div>
 
         {/* Assignee & Time */}
-        <div className="flex items-center justify-between mt-2 pt-2 border-t border-dark-700">
+        <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-600">
           {agent && (
             <div className="flex items-center space-x-1 text-xs text-gray-400">
               <User className="w-3 h-3" />
@@ -267,7 +267,7 @@ export function KanbanBoard({
             // TODO: Open create task modal
             console.log('Create new task')
           }}
-          className="flex items-center space-x-2 px-4 py-2 bg-openclaw-primary hover:bg-openclaw-primary/90 text-white rounded-lg transition-colors"
+          className="flex items-center space-x-2 px-4 py-2 bg-blue-500 hover:bg-blue-500/90 text-white rounded-lg transition-colors"
         >
           <Plus className="w-4 h-4" />
           <span>Add Task</span>
@@ -285,13 +285,13 @@ export function KanbanBoard({
           >
             {/* Column Header */}
             <div className={cn(
-              "bg-dark-900 border-t-4 rounded-t-lg p-4 border-b border-dark-800",
+              "bg-slate-800 border-t-4 rounded-t-lg p-4 border-b border-slate-700",
               column.color
             )}>
               <div className="flex items-center justify-between">
                 <h3 className="font-medium text-white">{column.title}</h3>
                 <div className="flex items-center space-x-2">
-                  <span className="text-sm text-gray-400 bg-dark-800 px-2 py-1 rounded">
+                  <span className="text-sm text-gray-400 bg-slate-700 px-2 py-1 rounded">
                     {column.tasks.length}
                   </span>
                   <button className="text-gray-400 hover:text-white">
@@ -302,10 +302,10 @@ export function KanbanBoard({
             </div>
 
             {/* Column Content */}
-            <div className="flex-1 bg-dark-900 rounded-b-lg p-4 min-h-0 overflow-y-auto">
+            <div className="flex-1 bg-slate-800 rounded-b-lg p-4 min-h-0 overflow-y-auto">
               {column.tasks.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
-                  <div className="w-12 h-12 bg-dark-800 rounded-lg flex items-center justify-center mx-auto mb-2">
+                  <div className="w-12 h-12 bg-slate-700 rounded-lg flex items-center justify-center mx-auto mb-2">
                     <Tag className="w-6 h-6" />
                   </div>
                   <p className="text-sm">No tasks</p>

@@ -130,9 +130,9 @@ export function TaskAssignment({
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-dark-900 rounded-lg border border-dark-800 shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-slate-800 rounded-lg border border-slate-700 shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-dark-800">
+        <div className="flex items-center justify-between p-6 border-b border-slate-700">
           <div>
             <h2 className="text-xl font-semibold text-white">Create & Assign Task</h2>
             <p className="text-sm text-gray-400">Define a new task and assign it to an agent</p>
@@ -157,7 +157,7 @@ export function TaskAssignment({
               value={formData.title}
               onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
               className={cn(
-                "w-full px-3 py-2 bg-dark-800 border border-dark-700 rounded-lg text-white placeholder-gray-400 focus:border-openclaw-primary focus:outline-none",
+                "w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none",
                 errors.title && "border-red-500"
               )}
               placeholder="Enter task title..."
@@ -176,7 +176,7 @@ export function TaskAssignment({
               rows={3}
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-              className="w-full px-3 py-2 bg-dark-800 border border-dark-700 rounded-lg text-white placeholder-gray-400 focus:border-openclaw-primary focus:outline-none resize-none"
+              className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none resize-none"
               placeholder="Describe the task requirements and context..."
             />
           </div>
@@ -193,10 +193,10 @@ export function TaskAssignment({
                   ...prev, 
                   priority: e.target.value as Task['priority']
                 }))}
-                className="w-full px-3 py-2 bg-dark-800 border border-dark-700 rounded-lg text-white focus:border-openclaw-primary focus:outline-none"
+                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:border-blue-500 focus:outline-none"
               >
                 {priorityOptions.map(priority => (
-                  <option key={priority} value={priority} className="bg-dark-800">
+                  <option key={priority} value={priority} className="bg-slate-700">
                     {priority.charAt(0).toUpperCase() + priority.slice(1)}
                   </option>
                 ))}
@@ -214,7 +214,7 @@ export function TaskAssignment({
                 value={formData.estimatedTime}
                 onChange={(e) => setFormData(prev => ({ ...prev, estimatedTime: e.target.value }))}
                 className={cn(
-                  "w-full px-3 py-2 bg-dark-800 border border-dark-700 rounded-lg text-white placeholder-gray-400 focus:border-openclaw-primary focus:outline-none",
+                  "w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none",
                   errors.estimatedTime && "border-red-500"
                 )}
                 placeholder="2.5"
@@ -234,7 +234,7 @@ export function TaskAssignment({
               type="datetime-local"
               value={formData.dueDate}
               onChange={(e) => setFormData(prev => ({ ...prev, dueDate: e.target.value }))}
-              className="w-full px-3 py-2 bg-dark-800 border border-dark-700 rounded-lg text-white focus:border-openclaw-primary focus:outline-none"
+              className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:border-blue-500 focus:outline-none"
             />
           </div>
 
@@ -247,7 +247,7 @@ export function TaskAssignment({
               type="text"
               value={formData.tags}
               onChange={(e) => setFormData(prev => ({ ...prev, tags: e.target.value }))}
-              className="w-full px-3 py-2 bg-dark-800 border border-dark-700 rounded-lg text-white placeholder-gray-400 focus:border-openclaw-primary focus:outline-none"
+              className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none"
               placeholder="frontend, react, ui (comma-separated)"
             />
           </div>
@@ -268,8 +268,8 @@ export function TaskAssignment({
                   <label
                     key={agent.id}
                     className={cn(
-                      "flex items-center p-3 rounded-lg border border-dark-700 cursor-pointer transition-all duration-200 hover:border-openclaw-primary/50",
-                      formData.assignedTo === agent.id && "border-openclaw-primary bg-openclaw-primary/10"
+                      "flex items-center p-3 rounded-lg border border-slate-600 cursor-pointer transition-all duration-200 hover:border-blue-500/50",
+                      formData.assignedTo === agent.id && "border-blue-500 bg-blue-500/10"
                     )}
                   >
                     <input
@@ -321,7 +321,7 @@ export function TaskAssignment({
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end space-x-3 pt-4 border-t border-dark-800">
+          <div className="flex items-center justify-end space-x-3 pt-4 border-t border-slate-700">
             <button
               type="button"
               onClick={onClose}
@@ -332,7 +332,7 @@ export function TaskAssignment({
             <button
               type="submit"
               disabled={availableAgents.length === 0}
-              className="flex items-center space-x-2 px-4 py-2 bg-openclaw-primary hover:bg-openclaw-primary/90 disabled:bg-gray-700 disabled:text-gray-400 text-white rounded-lg transition-colors"
+              className="flex items-center space-x-2 px-4 py-2 bg-blue-500 hover:bg-blue-500/90 disabled:bg-gray-700 disabled:text-gray-400 text-white rounded-lg transition-colors"
             >
               <Save className="w-4 h-4" />
               <span>Create & Assign</span>

@@ -142,7 +142,7 @@ export function AgentStatusDashboard({
               <p className="text-sm font-medium text-gray-400">Total Agents</p>
               <p className="text-2xl font-bold text-white">{agents.length}</p>
             </div>
-            <Users className="w-8 h-8 text-openclaw-primary" />
+            <Users className="w-8 h-8 text-blue-500" />
           </div>
         </div>
 
@@ -186,7 +186,7 @@ export function AgentStatusDashboard({
             key={agent.id}
             className={cn(
               "agent-card cursor-pointer transition-all duration-200",
-              selectedAgent?.id === agent.id && "ring-2 ring-openclaw-primary"
+              selectedAgent?.id === agent.id && "ring-2 ring-blue-500"
             )}
             onClick={() => {
               setSelectedAgent(agent)
@@ -259,7 +259,7 @@ export function AgentStatusDashboard({
               {agent.capabilities.slice(0, 3).map((capability) => (
                 <span
                   key={capability}
-                  className="text-xs px-2 py-1 bg-openclaw-primary/10 text-openclaw-primary rounded"
+                  className="text-xs px-2 py-1 bg-blue-500/10 text-blue-500 rounded"
                 >
                   {capability}
                 </span>
