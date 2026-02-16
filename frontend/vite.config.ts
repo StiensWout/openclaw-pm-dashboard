@@ -13,6 +13,13 @@ export default defineConfig({
   server: {
     port: 3000,
     host: true, // Allow external connections for Tailscale
+    allowedHosts: [
+      'localhost',
+      '127.0.0.1',
+      'hostingervps.barracuda-banfish.ts.net',
+      '100.86.4.92',
+      '148.230.114.88'
+    ],
     proxy: {
       '/api': {
         target: 'http://localhost:3001',
