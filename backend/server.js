@@ -4,6 +4,7 @@ const socketIo = require('socket.io');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const notificationService = require('./services/notificationService');
 require('dotenv').config();
 
 // Initialize Express app
@@ -19,6 +20,7 @@ const io = socketIo(server, {
 });
 
 const PORT = process.env.PORT || 3001;
+const BIND_HOST = process.env.BIND_HOST || 'localhost'; // Default to localhost for security
 
 // Middleware
 app.use(helmet());
@@ -39,8 +41,25 @@ app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'ok', 
     timestamp: new Date().toISOString(),
-    version: '0.1.0'
+    version: '0.1.0',
+    tailscale: process.env.TAILSCALE_HOSTNAME || 'not-configured',
+    notifications: notificationService.isEnabled ? 'enabled' : 'disabled'
   });
+});
+
+// Test notification endpoint
+app.post('/api/notifications/test', async (req, res) => {
+  try {
+    const result = await notificationService.notifyUser(
+      'Test Notification',
+      'This is a test notification from the OpenClaw PM Dashboard',
+      'low',
+      { agent: 'test-endpoint' }
+    );
+    res.json({ success: true, result });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
 });
 
 app.get('/api/projects', (req, res) => {
@@ -161,10 +180,34 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-server.listen(PORT, () => {
-  console.log(`OpenClaw PM Dashboard Backend running on port ${PORT}`);
+server.listen(PORT, BIND_HOST, async () => {
+  console.log(`OpenClaw PM Dashboard Backend running on ${BIND_HOST}:${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`CORS Origin: ${process.env.CORS_ORIGIN || 'http://localhost:3000'}`);
+  console.log(`Tailscale Hostname: ${process.env.TAILSCALE_HOSTNAME || 'localhost'}`);
+  
+  // Log security configuration
+  if (BIND_HOST !== 'localhost' && BIND_HOST !== '127.0.0.1') {
+    console.log(`🔒 Security: Server bound to specific interface (${BIND_HOST})`);
+  } else {
+    console.log(`⚠️  Security: Server bound to localhost only`);
+  }
+
+  // Notify user that the server is ready
+  try {
+    await notificationService.notifyMilestone(
+      'Backend Server Started',
+      'orchestrator-agent',
+      {
+        host: BIND_HOST,
+        port: PORT,
+        tailscale_hostname: process.env.TAILSCALE_HOSTNAME,
+        environment: process.env.NODE_ENV || 'development'
+      }
+    );
+  } catch (error) {
+    console.warn('Failed to send startup notification:', error.message);
+  }
 });
 
 module.exports = { app, server, io };

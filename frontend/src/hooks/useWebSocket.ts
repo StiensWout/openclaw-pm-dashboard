@@ -11,7 +11,7 @@ interface UseWebSocketProps {
 }
 
 export function useWebSocket({
-  url = 'ws://localhost:3001',
+  url = import.meta.env.VITE_WS_URL || 'ws://localhost:3001',
   onMessage,
   onConnect,
   onDisconnect,
