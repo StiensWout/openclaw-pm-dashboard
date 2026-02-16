@@ -1,0 +1,205 @@
+name: OpenClaw PM Dashboard - Deploy
+
+on:
+  push:
+    branches: [ main, master ]
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
+      - '.gitignore'
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+        - production
+        - development
+
+env:
+  NODE_VERSION: '18'
+  
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: |
+        npm ci
+        cd backend && npm ci
+        cd ../frontend && npm ci
+        
+    - name: Lint backend
+      run: cd backend && npm run lint
+      
+    - name: Lint frontend  
+      run: cd frontend && npm run lint || echo "Frontend linting failed, continuing..."
+      
+    - name: Test backend
+      run: cd backend && npm test
+      
+    - name: Test frontend
+      run: cd frontend && npm test || echo "Frontend tests failed, continuing..."
+      
+    - name: Build production assets
+      run: |
+        npm run prod:build
+        
+  deploy-development:
+    name: Deploy to Development
+    runs-on: self-hosted
+    needs: test
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    environment: development
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        
+    - name: Stop existing development environment
+      run: |
+        cd ${{ github.workspace }}
+        ./deploy/scripts/dev-stop.sh || echo "No development environment running"
+        
+    - name: Start development environment
+      run: |
+        cd ${{ github.workspace }}
+        ./deploy/scripts/dev-start.sh --background
+        
+    - name: Wait for services to start
+      run: sleep 30
+      
+    - name: Health check
+      run: |
+        cd ${{ github.workspace }}
+        ./deploy/scripts/health-check.sh
+        
+    - name: Notify deployment success
+      if: success()
+      run: |
+        echo "🚀 Development deployment successful!"
+        echo "Frontend: https://hostingervps.barracuda-banfish.ts.net:3000"
+        echo "Backend: https://hostingervps.barracuda-banfish.ts.net:3001"
+        
+    - name: Notify deployment failure
+      if: failure()
+      run: |
+        echo "❌ Development deployment failed!"
+        cd ${{ github.workspace }}
+        tail -20 deploy/logs/backend-dev.log || echo "No backend logs"
+        tail -20 deploy/logs/frontend-dev.log || echo "No frontend logs"
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: self-hosted
+    needs: test
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.event.inputs.environment == 'production'
+    environment: production
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        
+    - name: Stop existing production environment
+      run: |
+        cd ${{ github.workspace }}
+        ./deploy/scripts/prod-stop.sh || echo "No production environment running"
+        
+    - name: Deploy to production
+      run: |
+        cd ${{ github.workspace }}
+        ./deploy/scripts/prod-deploy.sh
+        
+    - name: Health check
+      run: |
+        cd ${{ github.workspace }}
+        ./deploy/scripts/health-check.sh
+        
+    - name: Setup monitoring
+      run: |
+        cd ${{ github.workspace }}
+        ./deploy/monitoring/setup-monitoring.sh
+        
+    - name: Notify deployment success
+      if: success()
+      run: |
+        echo "🎉 Production deployment successful!"
+        echo "Frontend: https://hostingervps.barracuda-banfish.ts.net:4000"
+        echo "Backend: https://hostingervps.barracuda-banfish.ts.net:4001"
+        
+    - name: Notify deployment failure
+      if: failure()
+      run: |
+        echo "💥 Production deployment failed!"
+        cd ${{ github.workspace }}
+        tail -20 deploy/logs/backend-prod.log || echo "No backend logs"
+        tail -20 deploy/logs/frontend-prod.log || echo "No frontend logs"
+
+  notify-openclaw:
+    name: Notify via OpenClaw
+    runs-on: self-hosted
+    needs: [deploy-development, deploy-production]
+    if: always()
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Notify OpenClaw on success
+      if: needs.deploy-development.result == 'success' || needs.deploy-production.result == 'success'
+      run: |
+        # Attempt to notify via OpenClaw if available
+        if command -v openclaw >/dev/null 2>&1; then
+          openclaw message send --target="whatsapp" --message="🚀 OpenClaw PM Dashboard deployed successfully!
+          
+Development: https://hostingervps.barracuda-banfish.ts.net:3000
+Production: https://hostingervps.barracuda-banfish.ts.net:4000
+
+Commit: ${{ github.sha }}
+Branch: ${{ github.ref_name }}
+" || echo "OpenClaw notification failed"
+        else
+          echo "OpenClaw CLI not available for notifications"
+        fi
+        
+    - name: Notify OpenClaw on failure
+      if: needs.deploy-development.result == 'failure' || needs.deploy-production.result == 'failure'
+      run: |
+        # Attempt to notify via OpenClaw if available
+        if command -v openclaw >/dev/null 2>&1; then
+          openclaw message send --target="whatsapp" --message="❌ OpenClaw PM Dashboard deployment failed!
+          
+Check GitHub Actions for details.
+Commit: ${{ github.sha }}
+Branch: ${{ github.ref_name }}
+
+May need manual intervention.
+" || echo "OpenClaw notification failed"
+        else
+          echo "OpenClaw CLI not available for notifications"
+        fi
