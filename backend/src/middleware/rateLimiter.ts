@@ -93,7 +93,8 @@ export const createRateLimiter = (options: {
       const secs = Math.round(rejRes.msBeforeNext / 1000) || 1;
       res.set('Retry-After', String(secs));
       
-      console.warn(`Custom rate limit exceeded for ${key}, retry after ${secs}s`);
+      const keyForLog = options.keyGenerator ? options.keyGenerator(req) : (req.ip || 'unknown');
+      console.warn(`Custom rate limit exceeded for ${keyForLog}, retry after ${secs}s`);
       next(createTooManyRequestsError(`Rate limit exceeded. Try again in ${secs} seconds.`));
     }
   };
@@ -123,5 +124,5 @@ export const taskRateLimiter = createRateLimiter({
 export const agentRateLimiter = createRateLimiter({
   points: 100, // 100 agent status updates
   duration: 60, // Per minute
-  keyGenerator: (req) => `agent-${req.ip}`
+  keyGenerator: (req: any) => `agent-${req.ip}`
 });
