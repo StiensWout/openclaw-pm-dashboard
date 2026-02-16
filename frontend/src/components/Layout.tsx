@@ -33,15 +33,27 @@ const navItems: NavItem[] = [
 ]
 
 export function Layout({ children }: LayoutProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(false) // Start closed on mobile
   const [activeNav, setActiveNav] = useState('dashboard')
 
   return (
-    <div className="min-h-screen bg-dark-950 flex">
+    <div className="min-h-screen bg-dark-950 flex relative">
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
       <div className={cn(
-        "bg-dark-900 border-r border-dark-800 transition-all duration-300 flex flex-col",
-        sidebarOpen ? "w-64" : "w-16"
+        "bg-dark-900 border-r border-dark-800 transition-all duration-300 flex flex-col z-50",
+        // Mobile: fixed overlay sidebar
+        "fixed lg:static inset-y-0 left-0",
+        sidebarOpen 
+          ? "w-64 translate-x-0" 
+          : "w-64 -translate-x-full lg:translate-x-0 lg:w-16"
       )}>
         {/* Logo/Header */}
         <div className="p-4 border-b border-dark-800">
@@ -102,27 +114,37 @@ export function Layout({ children }: LayoutProps) {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col lg:ml-0">
         {/* Top Bar */}
-        <header className="bg-dark-900 border-b border-dark-800 px-6 py-4">
+        <header className="bg-dark-900 border-b border-dark-800 px-4 lg:px-6 py-4">
           <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-semibold text-white capitalize">
-                {navItems.find(item => item.id === activeNav)?.label || 'Dashboard'}
-              </h2>
-              <p className="text-sm text-gray-400">
-                Multi-Agent Project Management System
-              </p>
+            <div className="flex items-center space-x-4">
+              {/* Mobile menu button */}
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="lg:hidden p-2 rounded-lg text-gray-400 hover:bg-dark-800 hover:text-white transition-colors"
+              >
+                <Menu className="w-5 h-5" />
+              </button>
+              
+              <div>
+                <h2 className="text-xl font-semibold text-white capitalize">
+                  {navItems.find(item => item.id === activeNav)?.label || 'Dashboard'}
+                </h2>
+                <p className="text-sm text-gray-400 hidden sm:block">
+                  Multi-Agent Project Management System
+                </p>
+              </div>
             </div>
             
             {/* Connection Status */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 lg:space-x-4">
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-sm text-gray-300">Connected</span>
+                <span className="text-sm text-gray-300 hidden sm:inline">Connected</span>
               </div>
               
-              <div className="text-sm text-gray-400">
+              <div className="text-sm text-gray-400 hidden md:block">
                 {new Date().toLocaleTimeString()}
               </div>
             </div>
@@ -130,7 +152,7 @@ export function Layout({ children }: LayoutProps) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-6 overflow-auto">
+        <main className="flex-1 p-4 lg:p-6 overflow-auto">
           {children}
         </main>
       </div>
